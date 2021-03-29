@@ -19,18 +19,17 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final int ONE = 1;
     private TextView questionOne, questionTwo, questionThree, questionFour;
     private MaterialRadioButton radioButtonOne, radioButtonTwo, radioButtonThree;
     private CheckBox checkBoxQ1One, checkBoxQ1Two, checkBoxQ1Three, checkBoxQ4One, checkBoxQ4Two, checkBoxQ4Three;
     private EditText inputAnswer;
-    ArrayList<Question> questions = Question.getQuestions();
-    ArrayList<String> selectedAnswer = new ArrayList<>();
+    private ArrayList<Question> questions = Question.getQuestions();
+    private ArrayList<String> selectedAnswer = new ArrayList<>();
     private Button submit;
-    private int questionIndex;
+
     private RadioGroup radioGroup;
     private Button playAgain;
-    AlertDialog alertDialog = null;
+    private AlertDialog alertDialog = null;
     private ArrayList<String> numOfAns;
     private ArrayList<String> correctAnswers;
 
@@ -133,22 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void nextQuestion() {
-        submit.setOnClickListener(v -> {
-            if (!radioButtonOne.isChecked() && !radioButtonTwo.isChecked() && !radioButtonThree.isChecked()) {
-                Toast.makeText(this, "Select an answer", Toast.LENGTH_SHORT).show();
-            } else if (questionIndex <= questions.size() - ONE) {
-                //getSelectedAnswers();
-                setQuestions();
-            } else {
-                processAnswers();
-                playAgain();
-
-            }
-        });
-
-
-    }
 
     public void getSelectedAnswers() {
 
