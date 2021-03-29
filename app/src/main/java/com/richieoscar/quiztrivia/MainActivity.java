@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void getSelectedAnswers() {
+    private void getSelectedAnswers() {
 
         if (radioButtonOne.isChecked()) {
             selectedAnswer.add(radioButtonOne.getText().toString());
