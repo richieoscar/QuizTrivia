@@ -2,7 +2,6 @@ package com.richieoscar.quiztrivia;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void setQuestions() {
-        submit.setClickable(true);
         Question item = null;
         String[] ans = null;
         for (int i = 0; i < questions.size(); i++) {
@@ -111,8 +109,8 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
         }
+        playAgain.setEnabled(false);
     }
-
 
     private void playAgain() {
         playAgain.setOnClickListener(v -> {
@@ -126,39 +124,43 @@ public class MainActivity extends AppCompatActivity {
             checkBoxQ4Three.setChecked(false);
             radioButtonOne.setChecked(false);
             setQuestions();
+            submit.setEnabled(true);
 
         });
-
-
     }
-
 
     private void getSelectedAnswers() {
 
         if (radioButtonOne.isChecked()) {
             selectedAnswer.add(radioButtonOne.getText().toString());
-        } else if (radioButtonTwo.isChecked()) {
-            selectedAnswer.add(radioButtonTwo.getText().toString());
-        } else if (radioButtonThree.isChecked()) {
-            selectedAnswer.add(radioButtonThree.getText().toString());
-        } else if (checkBoxQ1One.isChecked()) {
-            selectedAnswer.add(checkBoxQ1One.getText().toString());
-        } else if (checkBoxQ1Two.isChecked()) {
-            selectedAnswer.add(checkBoxQ1Two.getText().toString());
-        } else if (checkBoxQ1Three.isChecked()) {
-            selectedAnswer.add(checkBoxQ1Three.getText().toString());
-        } else if (checkBoxQ4One.isChecked()) {
-            selectedAnswer.add(checkBoxQ4One.getText().toString());
-
-        } else if (checkBoxQ4Two.isChecked()) {
-            selectedAnswer.add(checkBoxQ4Two.getText().toString());
-        } else if (checkBoxQ4Three.isChecked()) {
-            selectedAnswer.add(checkBoxQ4Three.getText().toString());
-        } else if (!inputAnswer.getText().toString().isEmpty()) {
-            selectedAnswer.add(inputAnswer.getText().toString());
         }
-
-
+        if (radioButtonTwo.isChecked()) {
+            selectedAnswer.add(radioButtonTwo.getText().toString());
+        }
+        if (radioButtonThree.isChecked()) {
+            selectedAnswer.add(radioButtonThree.getText().toString());
+        }
+        if (checkBoxQ1One.isChecked()) {
+            selectedAnswer.add(checkBoxQ1One.getText().toString());
+        }
+        if (checkBoxQ1Two.isChecked()) {
+            selectedAnswer.add(checkBoxQ1Two.getText().toString());
+        }
+        if (checkBoxQ1Three.isChecked()) {
+            selectedAnswer.add(checkBoxQ1Three.getText().toString());
+        }
+        if (checkBoxQ4One.isChecked()) {
+            selectedAnswer.add(checkBoxQ4One.getText().toString());
+        }
+        if (checkBoxQ4Two.isChecked()) {
+            selectedAnswer.add(checkBoxQ4Two.getText().toString());
+        }
+        if (checkBoxQ4Three.isChecked()) {
+            selectedAnswer.add(checkBoxQ4Three.getText().toString());
+        }
+        if (!inputAnswer.getText().toString().isEmpty()) {
+            selectedAnswer.add(inputAnswer.getText().toString().toUpperCase());
+        }
     }
 
     private void validate() {
@@ -185,14 +187,14 @@ public class MainActivity extends AppCompatActivity {
     private void submit() {
         submit.setOnClickListener(v -> {
             validate();
-            //getSelectedAnswers();
             processAnswers();
+            submit.setEnabled(false);
+            playAgain.setEnabled(true);
         });
 
     }
 
     private void processAnswers() {
-
         correctAnswers = Question.getCorrectAnswers();
         getSelectedAnswers();
         if (correctAnswers.equals(selectedAnswer)) {
@@ -214,8 +216,8 @@ public class MainActivity extends AppCompatActivity {
     private void showSuccesAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Result");
-        builder.setMessage("Congratulations! \nYou got all questions correctly");
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
+        builder.setMessage(R.string.congrats_message);
+        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 alertDialog.dismiss();
@@ -228,8 +230,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void showQuestionsCorrect() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Result");
-        builder.setMessage("Score " + numOfAns.size() + "/" + correctAnswers.size());
+        builder.setTitle(R.string.result);
+        builder.setMessage("Your Score " + numOfAns.size() + "/" + correctAnswers.size());
         builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

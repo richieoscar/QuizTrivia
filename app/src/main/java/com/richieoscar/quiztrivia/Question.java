@@ -25,8 +25,6 @@ public class Question {
         questions.add(new Question("2. Richest Man in Africa?", ans2));
         questions.add(new Question("3. Fastest Land Animal?", ans3));
         questions.add(new Question("4. Examples of Programming Languages?", ans4));
-//        questions.add(new Question("Current US President?", ans5));
-//        questions.add(new Question("Type of CryptoCurrency?", ans6));
         return questions;
     }
 
@@ -37,7 +35,7 @@ public class Question {
         correctAnswers.add("Aliko Dangote");
         correctAnswers.add("Java");
         correctAnswers.add("Kotlin");
-        correctAnswers.add("Cheetah");
+        correctAnswers.add("CHEETAH");
         return correctAnswers;
     }
 
