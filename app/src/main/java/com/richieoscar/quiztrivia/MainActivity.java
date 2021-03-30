@@ -1,11 +1,9 @@
 package com.richieoscar.quiztrivia;
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,29 +16,36 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView questionOne, questionTwo, questionThree, questionFour;
-    private MaterialRadioButton radioButtonOne, radioButtonTwo, radioButtonThree;
-    private CheckBox checkBoxQ1One, checkBoxQ1Two, checkBoxQ1Three, checkBoxQ4One, checkBoxQ4Two, checkBoxQ4Three;
+    private TextView questionOne;
+    private TextView questionTwo;
+    private TextView questionThree;
+    private TextView questionFour;
+    private MaterialRadioButton radioButtonOne;
+    private MaterialRadioButton radioButtonTwo;
+    private MaterialRadioButton radioButtonThree;
+    private CheckBox checkBoxQ1One;
+    private CheckBox checkBoxQ1Two;
+    private CheckBox checkBoxQ1Three;
+    private CheckBox checkBoxQ4One;
+    private CheckBox checkBoxQ4Two;
+    private CheckBox checkBoxQ4Three;
     private EditText inputAnswer;
     private ArrayList<Question> questions = Question.getQuestions();
     private ArrayList<String> selectedAnswer = new ArrayList<>();
     private Button submit;
-
-    private RadioGroup radioGroup;
     private Button playAgain;
-    private AlertDialog alertDialog = null;
-    private ArrayList<String> numOfAns;
     private ArrayList<String> correctAnswers;
+    private boolean check;
+    private int score;
+    private boolean checkTwo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         initializeViews();
-
-
         setQuestions();
-        //getSelectedAnswers();
         submit();
         playAgain();
 
@@ -55,7 +60,6 @@ public class MainActivity extends AppCompatActivity {
         radioButtonOne = findViewById(R.id.radioButton_one);
         radioButtonTwo = findViewById(R.id.radioButton_two);
         radioButtonThree = findViewById(R.id.radioButton_three);
-        radioGroup = findViewById(R.id.radioGroup);
         playAgain = findViewById(R.id.button_play_again);
         checkBoxQ1One = findViewById(R.id.checkBox_q1_one);
         checkBoxQ1Two = findViewById(R.id.checkBox_q1_two);
@@ -115,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
     private void playAgain() {
         playAgain.setOnClickListener(v -> {
             selectedAnswer.clear();
+            score= 0;
             inputAnswer.setText("");
             checkBoxQ1One.setChecked(false);
             checkBoxQ1Two.setChecked(false);
@@ -129,7 +134,47 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void getSelectedAnswers() {
+
+    private void getAnswerForQuestionOne(){
+        if (isAllCheckedQuestionOne() ){
+            //Failed the question if all checkbox is checked
+           score = 0;
+        }
+        else {
+            if (checkBoxQ1One.isChecked()) {
+                selectedAnswer.add(checkBoxQ1One.getText().toString());
+            }
+            if (checkBoxQ1Two.isChecked()) {
+                selectedAnswer.add(checkBoxQ1Two.getText().toString());
+            }
+            if (checkBoxQ1Three.isChecked()) {
+                selectedAnswer.add(checkBoxQ1Three.getText().toString());
+            }
+        }
+    }
+
+    private void getAnswerForQuestionFour(){
+        if (isAllCheckedQuestionFour() ){
+            //failed  the question if all checkbox is checked
+            score = 0;
+        }
+        else {
+            if (checkBoxQ4One.isChecked()) {
+                selectedAnswer.add(checkBoxQ4One.getText().toString());
+
+            }
+            if (checkBoxQ4Two.isChecked()) {
+                selectedAnswer.add(checkBoxQ4Two.getText().toString());
+
+            }
+            if (checkBoxQ4Three.isChecked()) {
+                selectedAnswer.add(checkBoxQ4Three.getText().toString());
+
+            }
+        }
+    }
+
+    private void getAnswerForTwoAndThree() {
 
         if (radioButtonOne.isChecked()) {
             selectedAnswer.add(radioButtonOne.getText().toString());
@@ -140,30 +185,14 @@ public class MainActivity extends AppCompatActivity {
         if (radioButtonThree.isChecked()) {
             selectedAnswer.add(radioButtonThree.getText().toString());
         }
-        if (checkBoxQ1One.isChecked()) {
-            selectedAnswer.add(checkBoxQ1One.getText().toString());
-        }
-        if (checkBoxQ1Two.isChecked()) {
-            selectedAnswer.add(checkBoxQ1Two.getText().toString());
-        }
-        if (checkBoxQ1Three.isChecked()) {
-            selectedAnswer.add(checkBoxQ1Three.getText().toString());
-        }
-        if (checkBoxQ4One.isChecked()) {
-            selectedAnswer.add(checkBoxQ4One.getText().toString());
-        }
-        if (checkBoxQ4Two.isChecked()) {
-            selectedAnswer.add(checkBoxQ4Two.getText().toString());
-        }
-        if (checkBoxQ4Three.isChecked()) {
-            selectedAnswer.add(checkBoxQ4Three.getText().toString());
-        }
+
         if (!inputAnswer.getText().toString().isEmpty()) {
-            selectedAnswer.add(inputAnswer.getText().toString().toUpperCase());
+            selectedAnswer.add(inputAnswer.getText().toString().trim().toUpperCase());
         }
     }
 
     private void validate() {
+
         if (!radioButtonOne.isChecked() && !radioButtonTwo.isChecked() && !radioButtonThree.isChecked()) {
             Toast.makeText(this, "Select an answer for question 2", Toast.LENGTH_SHORT).show();
             return;
@@ -181,7 +210,6 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
     }
 
     private void submit() {
@@ -190,56 +218,43 @@ public class MainActivity extends AppCompatActivity {
             processAnswers();
             submit.setEnabled(false);
             playAgain.setEnabled(true);
-        });
 
+        });
+    }
+
+    private boolean isAllCheckedQuestionOne(){
+
+        if(checkBoxQ1One.isChecked() && checkBoxQ1Two.isChecked() && checkBoxQ1Three.isChecked()){
+            check = true;
+        }
+        return check;
+    }
+
+    private boolean isAllCheckedQuestionFour(){
+         if(checkBoxQ4One.isChecked() && checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
+             checkTwo = true;
+        }
+         return  checkTwo;
     }
 
     private void processAnswers() {
         correctAnswers = Question.getCorrectAnswers();
-        getSelectedAnswers();
-        if (correctAnswers.equals(selectedAnswer)) {
-            showSuccesAlert();
-            Toast.makeText(this, "Success", Toast.LENGTH_SHORT).show();
-        } else if (!correctAnswers.equals(selectedAnswer)) {
-            numOfAns = new ArrayList<>();
-            for (String ans : selectedAnswer) {
-                if (correctAnswers.contains(ans)) {
-                    numOfAns.add(ans);
-                }
-            }
-            showQuestionsCorrect();
+        getAnswerForQuestionOne();
+        getAnswerForTwoAndThree();
+        getAnswerForQuestionFour();
 
-        }
+
+        // check for correct answers in the list and give score
+        if (selectedAnswer.contains(checkBoxQ1One.getText().toString())) score++;
+        if (selectedAnswer.contains(checkBoxQ1Two.getText().toString())) score++;
+        if (selectedAnswer.contains(checkBoxQ4One.getText().toString())) score++;
+        if (selectedAnswer.contains(checkBoxQ4Two.getText().toString())) score++;
+        if (selectedAnswer.contains(radioButtonOne.getText().toString())) score++;
+        if (selectedAnswer.contains(correctAnswers.get(correctAnswers.size()-1))) score++;
+        Toast.makeText(this, "Your Score: " +score +"/" +correctAnswers.size(), Toast.LENGTH_SHORT).show();
+
 
     }
 
-    private void showSuccesAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Result");
-        builder.setMessage(R.string.congrats_message);
-        builder.setNegativeButton(R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.setCanceledOnTouchOutside(false);
-    }
 
-    private void showQuestionsCorrect() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(R.string.result);
-        builder.setMessage("Your Score " + numOfAns.size() + "/" + correctAnswers.size());
-        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                alertDialog.dismiss();
-            }
-        });
-        alertDialog = builder.create();
-        alertDialog.show();
-        alertDialog.setCanceledOnTouchOutside(false);
-    }
 }

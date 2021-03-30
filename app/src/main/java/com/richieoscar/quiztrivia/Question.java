@@ -3,8 +3,8 @@ package com.richieoscar.quiztrivia;
 import java.util.ArrayList;
 
 public class Question {
-    String question;
-    String[] answers;
+    private String question;
+    private String[] answers;
 
     private static String[] ans = {"Solar Energy", "Chemical Energy", "Block Energy"};
     private static String[] ans2 = {"Aliko Dangote", "Will Smith", "Bill Gates"};
