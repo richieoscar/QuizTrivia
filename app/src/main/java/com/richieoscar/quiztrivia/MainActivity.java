@@ -7,7 +7,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.radiobutton.MaterialRadioButton;
@@ -68,9 +67,7 @@ public class MainActivity extends AppCompatActivity {
         checkBoxQ4Two = findViewById(R.id.checkBox_q4_two);
         checkBoxQ4Three = findViewById(R.id.checkBox_q4_three);
         inputAnswer = findViewById(R.id.editText_input_answer);
-
     }
-
 
     public void setQuestions() {
         Question item = null;
@@ -100,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                     ans = item.getAnswers();
                     questionThree.setText(item.getQuestion());
                     break;
+
                 case 3:
                     item = questions.get(i);
                     ans = item.getAnswers();
@@ -132,17 +130,14 @@ public class MainActivity extends AppCompatActivity {
             radioButtonOne.setChecked(false);
             setQuestions();
             submit.setEnabled(true);
-
         });
     }
 
-
-    private void getAnswerForQuestionOne(){
-        if (isAllCheckedQuestionOne() ){
+    private void getAnswerForQuestionOne() {
+        if (isAllCheckedQuestionOne()) {
             //Failed the question if all checkbox is checked
-           score = 0;
-        }
-        else {
+            score = 0;
+        } else {
             if (checkBoxQ1One.isChecked()) {
                 selectedAnswer.add(checkBoxQ1One.getText().toString());
             }
@@ -155,29 +150,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void getAnswerForQuestionFour(){
-        if (isAllCheckedQuestionFour() ){
+    private void getAnswerForQuestionFour() {
+        if (isAllCheckedQuestionFour()) {
             //failed  the question if all checkbox is checked
             score = 0;
-        }
-        else {
+        } else {
             if (checkBoxQ4One.isChecked()) {
                 selectedAnswer.add(checkBoxQ4One.getText().toString());
-
             }
             if (checkBoxQ4Two.isChecked()) {
                 selectedAnswer.add(checkBoxQ4Two.getText().toString());
-
             }
             if (checkBoxQ4Three.isChecked()) {
                 selectedAnswer.add(checkBoxQ4Three.getText().toString());
-
             }
         }
     }
 
     private void getAnswerForTwoAndThree() {
-
         if (radioButtonOne.isChecked()) {
             selectedAnswer.add(radioButtonOne.getText().toString());
         }
@@ -194,7 +184,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void validate() {
-
         if (!radioButtonOne.isChecked() && !radioButtonTwo.isChecked() && !radioButtonThree.isChecked()) {
             Toast.makeText(this, "Select an answer for question 2", Toast.LENGTH_SHORT).show();
             return;
@@ -211,7 +200,6 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "Enter an answer for question 3", Toast.LENGTH_SHORT).show();
             return;
         }
-
     }
 
     private void submit() {
@@ -220,23 +208,59 @@ public class MainActivity extends AppCompatActivity {
             processAnswers();
             submit.setEnabled(false);
             playAgain.setEnabled(true);
-
         });
     }
 
-    private boolean isAllCheckedQuestionOne(){
-
-        if(checkBoxQ1One.isChecked() && checkBoxQ1Two.isChecked() && checkBoxQ1Three.isChecked()){
+    /*
+   This method makes sure the user selects the correct options for question one
+   The User is only awarded a score when he/she selects the correct options
+    */
+    private boolean isAllCheckedQuestionOne() {
+        if (checkBoxQ1One.isChecked() && checkBoxQ1Two.isChecked() && checkBoxQ1Three.isChecked()) {
+            check = true;
+        }
+        if (checkBoxQ1One.isChecked() && checkBoxQ1Three.isChecked()) {
+            check = true;
+        }
+        if (checkBoxQ1Two.isChecked() && checkBoxQ1Three.isChecked()) {
+            check = true;
+        }
+        if (checkBoxQ1One.isChecked() && !checkBoxQ1Two.isChecked() && !checkBoxQ1Three.isChecked()) {
+            check = true;
+        }
+        if (!checkBoxQ1One.isChecked() && checkBoxQ1Two.isChecked() && !checkBoxQ1Three.isChecked()) {
+            check = true;
+        }
+        if (!checkBoxQ1One.isChecked() && !checkBoxQ1Two.isChecked() && checkBoxQ1Three.isChecked()) {
             check = true;
         }
         return check;
     }
 
-    private boolean isAllCheckedQuestionFour(){
-         if(checkBoxQ4One.isChecked() && checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
-             checkTwo = true;
+    /*
+    This method makes sure the user selects the correct options for question four
+    The User is only awarded a score when he/she selects the correct options
+     */
+    private boolean isAllCheckedQuestionFour() {
+        if (checkBoxQ4One.isChecked() && checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
         }
-         return  checkTwo;
+        if (checkBoxQ4One.isChecked() && checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
+        }
+        if (checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
+        }
+        if (checkBoxQ4One.isChecked() && !checkBoxQ4Two.isChecked() && !checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
+        }
+        if (!checkBoxQ4One.isChecked() && checkBoxQ4Two.isChecked() && !checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
+        }
+        if (!checkBoxQ4One.isChecked() && !checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
+            checkTwo = true;
+        }
+        return checkTwo;
     }
 
     private void processAnswers() {
@@ -245,18 +269,13 @@ public class MainActivity extends AppCompatActivity {
         getAnswerForTwoAndThree();
         getAnswerForQuestionFour();
 
-
         // check for correct answers in the list and give score
         if (selectedAnswer.contains(checkBoxQ1One.getText().toString())) score++;
         if (selectedAnswer.contains(checkBoxQ1Two.getText().toString())) score++;
         if (selectedAnswer.contains(checkBoxQ4One.getText().toString())) score++;
         if (selectedAnswer.contains(checkBoxQ4Two.getText().toString())) score++;
         if (selectedAnswer.contains(radioButtonOne.getText().toString())) score++;
-        if (selectedAnswer.contains(correctAnswers.get(correctAnswers.size()-1))) score++;
-        Toast.makeText(this, "Your Score: " +score +"/" +correctAnswers.size(), Toast.LENGTH_SHORT).show();
-
-
+        if (selectedAnswer.contains(correctAnswers.get(correctAnswers.size() - 1))) score++;
+        Toast.makeText(this, "Your Score: " + score + "/" + correctAnswers.size(), Toast.LENGTH_SHORT).show();
     }
-
-
 }
