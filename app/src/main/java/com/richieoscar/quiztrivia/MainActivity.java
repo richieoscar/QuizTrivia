@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
     }
-
+    //submit method
     private void submit() {
         submit.setOnClickListener(v -> {
             validate();
@@ -231,6 +231,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean isAllCheckedQuestionFour(){
+        //checks if all check boxes are checked
          if(checkBoxQ4One.isChecked() && checkBoxQ4Two.isChecked() && checkBoxQ4Three.isChecked()) {
              checkTwo = true;
         }
